@@ -6,6 +6,7 @@ from xml.sax.handler import ContentHandler
 from smallsmilhandler import SmallSMILHandler
 import sys
 import json
+import urllib
 
 def imprimir(lista):
     for linea in lista:
@@ -16,7 +17,28 @@ def imprimir(lista):
             print(etiqueta + "\t" + atributo)
 
         else:
-            etiqueta =  linea        
+            etiqueta =  linea
+
+def busca_url(lista):
+        list_url = []
+        #print(lista)
+        for linea in lista:
+            if isinstance(linea, dict):
+                if 'src' in linea:
+                    list_url.append(linea['src'])
+                    #print(list_url)
+        return(list_url)
+
+def archivo_url(lista_url):
+    for linea in lista_url:
+        archivo = linea.split('/')[-1]
+        try:
+            urllib.request.urlretrieve(linea, archivo)
+        except ValueError:
+            sys.exit("Not a URL")
+        
+    
+   
 
   
 
@@ -36,3 +58,6 @@ if __name__ == "__main__":
     fch = open('karaoke.json', 'w')
     json.dump(cHandler.get_tags(), fch, sort_keys=True, indent=4, separators=(',',':'))
     fch.close()
+    
+    url_lista = busca_url(cHandler.get_tags())
+    archivo_url(url_lista)
