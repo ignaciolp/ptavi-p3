@@ -5,6 +5,7 @@ from xml.sax import make_parser
 from xml.sax.handler import ContentHandler
 from smallsmilhandler import SmallSMILHandler
 import sys
+import json
 
 def imprimir(lista):
     for linea in lista:
@@ -31,4 +32,7 @@ if __name__ == "__main__":
     parser.parse(open(sys.argv[1]))
     #print(cHandler.get_tags())
 
-    imprimir(cHandler.get_tags())
+    #imprimir(cHandler.get_tags())
+    fch = open('karaoke.json', 'w')
+    json.dump(cHandler.get_tags(), fch, sort_keys=True, indent=4, separators=(',',':'))
+    fch.close()
