@@ -8,56 +8,64 @@ import sys
 import json
 import urllib
 
-def imprimir(lista):
-    for linea in lista:
+class Karaokelocal(SmallSMILHandler):
+
+    def __init__(self, fichero):
+        parser = make_parser()
+        self.cHandler = SmallSMILHandler()
+        parser.setContentHandler(self.cHandler)
+        parser.parse(open(fichero)) 
+
+    def __str__(self):
         atributo = ""
-        if isinstance(linea, dict):
-            for valor_att in linea:
-                atributo = atributo + valor_att + "=" + linea[valor_att] + "\t"
-            print(etiqueta + "\t" + atributo)
+        for linea in self.cHandler.get_tags():
+            if isinstance(linea, dict):
+                for valor_att in linea:
+                    atributo = atributo + valor_att + "=" + linea[valor_att] + "\t"
+                print(etiqueta + "\t" + atributo)
 
+            else:
+                etiqueta =  linea
+        return(atributo) 
+
+    def to_json(self, fichero):
+
+        if new_fichero == "":
+            nuevo_fichero = fich[:fich.find('.')]
         else:
-            etiqueta =  linea
+            nuevofichero = new_fich
+            fich_json = open(nuevoficherof + '.json', 'w')
+            json.dump(self.cHandler.get_tags(), fich_json, sort_keys=True, indent=4, separators=(',', ':'))
+            fich_json.close()
 
-def busca_url(lista):
-        list_url = []
-        #print(lista)
-        for linea in lista:
+    def do_local(self):
+        for linea in self.cHandler.get_tags():
             if isinstance(linea, dict):
                 if 'src' in linea:
-                    list_url.append(linea['src'])
-                    #print(list_url)
-        return(list_url)
+                    if linea['scr'] == 'http':
+                        local = linea['src'].split('/')[-1]
+                        urllib.request.urlretrieve(linea['scr'], local)
+                           
 
-def archivo_url(lista_url):
-    for linea in lista_url:
-        archivo = linea.split('/')[-1]
-        try:
-            urllib.request.urlretrieve(linea, archivo)
-        except ValueError:
-            sys.exit("Not a URL")
-        
     
-   
-
-  
+    
 
 if __name__ == "__main__":
     try:
-        File = sys.argv[1]
+        fichero = sys.argv[1]
     except IndexError:
         sys.exit("Usage: python3 karaoke.py file.smil")
 
-    parser = make_parser()
-    cHandler = SmallSMILHandler()
-    parser.setContentHandler(cHandler)
-    parser.parse(open(sys.argv[1]))
-    #print(cHandler.get_tags())
+    try:
+        karaoke = Karaokelocal(fichero)
+    except FileNotFoundError:
+        sys.exit("Error: File not found")
 
-    #imprimir(cHandler.get_tags())
-    fch = open('karaoke.json', 'w')
-    json.dump(cHandler.get_tags(), fch, sort_keys=True, indent=4, separators=(',',':'))
-    fch.close()
+    print(karaoke)
+    karaoke.to_json(fichero)
+    karaoke.do_local()
+    karaoke.to_json(fichero, 'local')
+    print(karaoke)
     
-    url_lista = busca_url(cHandler.get_tags())
-    archivo_url(url_lista)
+   
+   
