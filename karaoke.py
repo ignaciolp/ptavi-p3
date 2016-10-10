@@ -8,13 +8,14 @@ import sys
 import json
 import urllib
 
+
 class Karaokelocal(SmallSMILHandler):
 
     def __init__(self, fichero):
         parser = make_parser()
         self.cHandler = SmallSMILHandler()
         parser.setContentHandler(self.cHandler)
-        parser.parse(open(fichero)) 
+        parser.parse(open(fichero))
 
     def __str__(self):
         atributo = ""
@@ -25,8 +26,8 @@ class Karaokelocal(SmallSMILHandler):
                 print(etiqueta + "\t" + atributo)
 
             else:
-                etiqueta =  linea
-        return(atributo) 
+                etiqueta = linea
+        return(atributo)
 
     def to_json(self, fichero):
 
@@ -45,10 +46,6 @@ class Karaokelocal(SmallSMILHandler):
                     if linea['scr'] == 'http':
                         local = linea['src'].split('/')[-1]
                         urllib.request.urlretrieve(linea['scr'], local)
-                           
-
-    
-    
 
 if __name__ == "__main__":
     try:
@@ -66,6 +63,3 @@ if __name__ == "__main__":
     karaoke.do_local()
     karaoke.to_json(fichero, 'local')
     print(karaoke)
-    
-   
-   
