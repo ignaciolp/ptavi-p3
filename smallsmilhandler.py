@@ -44,7 +44,7 @@ class SmallSMILHandler(ContentHandler):
             self.audio['begin'] = attrs.get('begin', "")
             self.audio['dur'] = attrs.get('dur', "")
             self.lista.append(self.audio)
-        elif name == 'textestream':
+        elif name == 'textstream':
             self.textstream = {}
             self.lista.append(name)
             self.textstream['src'] = attrs.get('src', "")
