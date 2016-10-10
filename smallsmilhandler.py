@@ -10,9 +10,8 @@ class SmallSMILHandler(ContentHandler):
 
         self.lista = []
 
+    def startElement(self, name, attrs):
 
-    def startElement(self,name,attrs):
-        
         if name == 'root-layout':
             self.root_layout = {}
             self.lista.append(name)
@@ -50,8 +49,8 @@ class SmallSMILHandler(ContentHandler):
             self.textstream['src'] = attrs.get('src', "")
             self.textstream['region'] = attrs.get('region', "")
             self.lista.append(self.textstream)
-    def get_tags(self):
 
+    def get_tags(self):
         return self.lista
 
 
@@ -62,5 +61,3 @@ if __name__ == "__main__":
         parser.setContentHandler(cHandler)
         parser.parse(open('karaoke.smil'))
         print(cHandler.get_tags())
-
-        
