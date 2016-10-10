@@ -6,6 +6,16 @@ from xml.sax.handler import ContentHandler
 from smallsmilhandler import SmallSMILHandler
 import sys
 
+def imprimir(lista):
+    for linea in lista:
+        atributo = ""
+        if isinstance(linea, dict):
+            for valor_att in linea:
+                atributo = atributo + valor_att + "=" + linea[valor_att] + "\t"
+            print(etiqueta + "\t" + atributo)
+
+        else:
+            etiqueta =  linea        
 
   
 
@@ -20,3 +30,5 @@ if __name__ == "__main__":
     parser.setContentHandler(cHandler)
     parser.parse(open(sys.argv[1]))
     #print(cHandler.get_tags())
+
+    imprimir(cHandler.get_tags())
